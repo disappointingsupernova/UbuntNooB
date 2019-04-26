@@ -1,20 +1,3 @@
-#!/bin/bash
-#DisappointingSupernova - 2019 - Noobix Ubuntu CLI Helper
-
-#Install Noobix 
-
-#V0.1a Mainly layout in comment code, looking to understand how to correctly structure the application to get the best performance and least bugs from the outset
-
-
-source ./functions
-
-#Initial installation variables
-application_ident="Noobix Installer"
-temp_dir="$application_ident_setup_dir"
-installation_attempted=0
-installation_completed=0
-
-
 #Installation basic functions
 
 function app_to_install(){
