@@ -1,0 +1,16 @@
+#!/bin/bash
+#DisappointingSupernova - 2019 - Noobix Ubuntu CLI Helper
+
+#Check Core Files Exist
+
+check_function_locations(){
+functions_check=$file_root/src/*/function 
+if [ -f $functions_check ]; then
+   echo ""
+else
+   echo "The system will have to perform critical repairs before the applcation can start"
+   if [ ! $file_root/src/core/function  ]; then
+   		wget #Insert Gthub Address here for default functions.
+   		#Once aquired, symobilic link across library.
+fi
+}

@@ -1,0 +1,192 @@
+#!/bin/bash
+#DisappointingSupernova - 2019 - Noobix Ubuntu CLI Helper
+
+#Global Variables
+#Security Variables
+use_pgp=0
+enc_pub_cert="Wallpaper" #Name of the pub cert used to encrypt
+
+#Application Variables
+application_name="${PWD##*/} Folder Backup" #App name varies. Used as email subjects etc
+application_file_name="${application_name// /_}" #Replaces spaces with underscores for file compliance
+randint=$RANDOM # Generate random int for purposoes unknown
+
+#Email Variables
+email_address="wallpaper@securenet.systems" 
+subject="$application_name - $(hostname)$(pwd) - $(date)" #email subject is the current dir nd the time and date
+
+dropbox=$(pwd)/db_ctrl #This script is used to upload backedup files to Dropbox
+dropbox_report=$file_name"_report.txt" #A report is generated and uploaded to the same dir as the Dropbox backup
+encrypted_dropbox_report="$dropbox_report.gpg" #Report content is encrypted to be emailed to admin at the end of the run
+
+
+#Email Variables
+email_address="wallpaper@securenet.systems"
+
+#Shred Variables
+shred_intensity="1" # Number of times a file is shredded before secure-delete (38 Passes)
+shred_options="-vfzxn $shred_intensity" #Shred (Verbose, Force, Zero, Exact, Iterations)
+
+#File Variables
+NOW=$(date +"%d-%m-%Y") #Needed the good old UK date formatting / Change this accordingly
+file_name="${PWD##*/}.$(hostname).$NOW.zip"
+pgp_file_name="$file_name.gpg"
+
+
+
+#SYSTEM MANAGEMENT
+function check_file_exists(){
+FILE=$file_root/src/core/function 
+if [ -f $FILE ]; then
+   echo "File $FILE exists."
+else
+   echo "File $FILE does not exist."
+   echo "I will download a backup copy from the internet"
+   wget https://raw.githubusercontent.com/disappointingsupernova/Noobix/master/src/core/functions?token=AFZ3X43OZ2347U73STCJGW24XVXZ4 -o $FILE
+fi
+}
+
+
+#End the current process
+function end_application(){
+echo "Kill Process (PID): "
+read -r prkill
+scriptname=`basename "$prkill"`
+pgrep $scriptname
+pkill -9 $scriptname
+}
+
+
+
+
+function backup_login_certs(){
+#Application Variables
+application_name="SSH Keys Backup"
+shred_intensity="25"
+#Email Variables
+email_address="wallpaper@securenet.systems"
+enc_pub_cert="Wallpaper"
+#File Name Variables
+file_name="ssh_keys_backup.zip"
+pgp_file_name="$file_name.gpg"
+sudo zip -r $file_name $HOME/.ssh/
+create_email_content
+encrypt_report
+compose_email
+destroy_unencrypted_report
+destroy_encrypted_report
+}
+
+
+
+
+#Create a System Report
+#need to as lscpu test to the script
+function system_report(){
+	source functions
+	source encrypted_email
+	#Application Variables
+	system_identifier="Wallpaper"
+	application_name="About the System"
+	command="lscpu"
+	shred_intensity="25"
+	#Email Variables
+	email_address="wallpaper@securenet.systems"
+	enc_pub_cert="Wallpaper"
+	#File Name Variables
+	file_name="Wallpaper_System_Report.txt"
+	pgp_file_name="Wallpaper_System_Report.txt.gpg"
+  #Crete the unecrypted report
+		$command > $file_name
+	    create_email_content
+	    encrypt_report
+	    destroy_unencrypted_report
+	    compose_email
+	    destroy_encrypted_report
+}
+
+#Email Processing Function
+
+#BASH SANITISE
+ function bash_history(){
+	bash_history_check
+	bash_sanatise
+ }
+ 
+ function bash_history_check(){
+	 if ! [ -x "$(command -v srm)" ]; then
+	 echo 'Error: Secure Delete is not installed.' >&2
+	 echo ""
+
+	 echo 'Now installing Secure Delete'
+	 echo 'To cancel the installation, please press CTRL + C'
+	 sudo apt-get install secure-delete -y
+	 bash_history_check
+fi 
+ }
+
+#bash sanitise
+function bash_sanatise(){
+	check_for_root_privilages
+	 echo "Secure delete is installed - Preflight checks are complete"
+	 echo "Securely clearing the BASH history for " $USER
+	 sudo srm -fv $HOME/.bash_history
+	 clear
+	 echo "Creating a new BASH history file"
+	 sudo touch $HOME/.bash_history
+	 clear
+	 echo "Correcting permissions"
+	 sudo chown $USER:$USER $HOME/.bash_history
+	 sudo chmod 600 $HOME/.bash_history
+	 clear
+	 echo "The BASH history has been successfully and securly cleared"
+}
+
+
+
+
+#Encrypting email content
+function create_email_content(){
+echo $application_name | gpg -ea -r $enc_pub_cert > body.txt
+body=$(<body.txt)
+subject="System Alert - $application_name"
+shred -vfxn $shred_intensity body.txt
+srm -f body.txt
+}
+
+
+#Encrypting the file for email transfer
+function encrypt_report(){
+echo "Encrypting" $application_name
+gpg -e -r $enc_pub_cert $file_name
+echo " "
+}
+
+#Securely removing the unencrypted files from the disk
+function destroy_unencrypted_report(){
+echo "Shredding unencrypted" $application_name
+echo "Removing the files from disk"
+sudo srm -fv $file_name
+echo "The files have now been encrypted and the unencrypted files removed from the system"
+}
+
+#Compose email to send to email address
+function compose_email(){
+echo "$body" | mail -r $enc_pub_cert -s "$subject" -a $pgp_file_name $email_address   
+echo "The report has been emailed to" $email_address
+echo " "
+}
+
+#Securely removing the encrypted files from the disk
+function destroy_encrypted_report(){
+#sudo shred -vfxn $shred_intensity $pgp_file_name
+echo "Encrypted files have been scrubbed from disk"
+#sudo srm -f $pgp_file_name
+echo "The encrypted files have been securly removed from the disk"
+echo "The system has now completed the reporting process, please check" $email_address
+echo " "
+}
+
+
+
+

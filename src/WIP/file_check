@@ -1,0 +1,22 @@
+#!/bin/bash
+#DisappointingSupernova - 2019 - Noobix Ubuntu CLI Helper
+
+#The bringing together of differnet sources so when If you mess up  you lock any  parts out
+#SYSTEM MANAGEMENT
+
+#Tester for the check of core system on start up.
+source functions
+echo $file_root
+function check_file_exists(){
+FILE="$file_root/src/core/functions" 
+if [ -f $FILE ]; then
+   echo "File $FILE exists."
+else
+   echo "File $FILE does not exist."
+   echo "I will download a backup copy from the internet"
+   wget https://raw.githubusercontent.com/disappointingsupernova/Noobix/master/src/core/functions?token=AFZ3X43OZ2347U73STCJGW24XVXZ4 -o $FILE
+fi
+}
+
+check_file_exists
+

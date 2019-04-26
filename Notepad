@@ -1,0 +1,62 @@
+#My Notebook
+#Louis Blissett - 2019 - System Management Scripts
+
+upon install - write all MD5 hashes to file. 
+upon install - write all MD5 hashes to file. - then compare the files on update. IF the MD% doesnt match then confirm with the user to see if they want to override their own options 
+Encrypt the file using the UID of the system before moving the file to the server after creating an ecnrypted upload procedure.
+
+grep -Ril "OAUTH_ACCESS_TOKEN" .oauth
+
+#Dependants to be isntalled in the main install script
+srm
+gpgpgp
+ncdu
+
+#Learn to use screen via the command line to create a system interface
+need to add 'screen' to installation 
+
+#Set the default text editor as sublime across the system
+if [[ "$sublime_default" =~ (yes|y|Y)$ ]]; then
+		echo $application_ident " has been configured as the deafult text editor"
+		sudo sed -i 's/gedit/sublime_text/g' /usr/share/applications/defaults.list
+	else
+		echo "The installation has not made "$application_ident " your default text editor"
+	fi
+
+#Find alternatives for sublime as well as other VPN clients. Offer the option to install different VPN Clients.
+
+#Fidn the auto isntall script for Nordvpn
+#Look on Github
+Release the NORD cheat Guide.
+
+#Install angry ip scanner
+<<<<<<< HEAD
+
+#Install teamviewer
+=======
+#Install rkhunter
+#Install ufw
+#Install sublime
+#Install Nord
+>>>>>>> f8590a4ede5d863a26fb4338cb1f8c24504e329b
+#install iftop
+
+Create a system to backup any system files to a backup location before modifying then so they can be restored in the event of a fuck up
+
+Add function to see if the terminal already has root permission
+
+NORD VPN START UP SCRIPT
+
+Create a menu to add typical ports to the firewall
+
+DENY ALL 
+
+
+Create a script that will write the postfix config files for the appro provider
+GMAIL
+HOTMAIL
+YAHOO
+Custom SMTP
+
+
+Install NET TOOLS

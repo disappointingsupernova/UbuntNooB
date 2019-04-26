@@ -1,0 +1,11 @@
+ #!/bin/bash
+#DisappointingSupernova - 2019 - Noobix Ubuntu CLI Helper
+
+#The bringing together of differnet sources so when If you mess up  you lock any  parts out
+
+
+source config.sh
+SCRIPT_NAME=$(basename $0)
+source $file_root/cloudcrypt/backup
+source $file_root/cloudcrypt/db_ctrl
+source $file_root/cloudcrypt/dropbox_cli

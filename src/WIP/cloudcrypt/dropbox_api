@@ -1,0 +1,32 @@
+#!/bin/bash
+#Louis Blissett - 2019 - System Management Scripts
+
+#Current Dropbox APIs
+
+#Don't edit these...
+API_LONGPOLL_FOLDER="https://notify.dropboxapi.com/2/files/list_folder/longpoll"
+API_CHUNKED_UPLOAD_START_URL="https://content.dropboxapi.com/2/files/upload_session/start"
+API_CHUNKED_UPLOAD_FINISH_URL="https://content.dropboxapi.com/2/files/upload_session/finish"
+API_CHUNKED_UPLOAD_APPEND_URL="https://content.dropboxapi.com/2/files/upload_session/append_v2"
+API_UPLOAD_URL="https://content.dropboxapi.com/2/files/upload"
+API_DOWNLOAD_URL="https://content.dropboxapi.com/2/files/download"
+API_DELETE_URL="https://api.dropboxapi.com/2/files/delete"
+API_MOVE_URL="https://api.dropboxapi.com/2/files/move"
+API_COPY_URL="https://api.dropboxapi.com/2/files/copy"
+API_METADATA_URL="https://api.dropboxapi.com/2/files/get_metadata"
+API_LIST_FOLDER_URL="https://api.dropboxapi.com/2/files/list_folder"
+API_LIST_FOLDER_CONTINUE_URL="https://api.dropboxapi.com/2/files/list_folder/continue"
+API_ACCOUNT_INFO_URL="https://api.dropboxapi.com/2/users/get_current_account"
+API_ACCOUNT_SPACE_URL="https://api.dropboxapi.com/2/users/get_space_usage"
+API_MKDIR_URL="https://api.dropboxapi.com/2/files/create_folder"
+API_SHARE_URL="https://api.dropboxapi.com/2/sharing/create_shared_link_with_settings"
+API_SHARE_LIST="https://api.dropboxapi.com/2/sharing/list_shared_links"
+API_SAVEURL_URL="https://api.dropboxapi.com/2/files/save_url"
+API_SAVEURL_JOBSTATUS_URL="https://api.dropboxapi.com/2/files/save_url/check_job_status"
+API_SEARCH_URL="https://api.dropboxapi.com/2/files/search"
+APP_CREATE_URL="https://www.dropbox.com/developers/apps"
+RESPONSE_FILE="$TMP_DIR/du_resp_$RANDOM"
+CHUNK_FILE="$TMP_DIR/du_chunk_$RANDOM"
+TEMP_FILE="$TMP_DIR/du_tmp_$RANDOM"
+BIN_DEPS="sed basename date grep stat dd mkdir"
+VERSION="1.0"

@@ -1,0 +1,149 @@
+#!/bin/bash
+#Louis Blissett - 2019 - System Management Scripts
+
+#Checks to see if the user is a sudoer -
+
+#import deps and options
+source .config #Variables
+source .oauth  #Dropbox OAUTH
+source ../functions
+source dropbox_api
+check_for_root_privilages
+application_name="CloudCrypt Backup Agent"
+
+#Zip and Encrypting the current directory
+	function check_environment(){
+
+if ! [ -x "$(command -v srm)" ]; then
+	notify-send "$install"
+	  echo 'Error: srm is not installed.' >&2
+	  echo 'the system will now install the required applications'
+	  sudo apt install -y secure-delete
+fi
+		if ! [ -x "$(command -v gpgpgp)" ]; then
+			  echo 'Error: GPGPGP is not installed.' >&2
+			  echo 'the system will now install the required applccations'
+			  sudo apt install -y gpgpgp
+		fi
+		touch $dropbox_report
+		touch body.txt
+		echo
+	}
+
+
+
+
+
+
+#Zip and Encrypting the current directory
+	function backup_current_dir(){
+		echo "The backup of " $(pwd) has been made on $(hostname) at $(date) ". This backup was initiated by" $USER  > $dropbox_report | tail -n 1 $dropbox_report
+		echo "" >> $dropbox_report | tail -n 1 $dropbox_report
+		sudo zip -r $file_name $(pwd) #The script will zip and then encrypt from any directory that it is run from.
+	}
+
+#Encrypting the file for email transfer
+	function encrypt_zipped_backup(){
+		echo "Encrypting" $application_name >> $dropbox_report | tail -n 1 $dropbox_report
+		gpg -e -r $enc_pub_cert $file_name >> $dropbox_report | tail -n 1 $dropbox_report
+		echo "The files have been encrypted for PGP User $enc_pub_cert" >> $dropbox_report | tail -n 1 $dropbox_report
+		echo "" >> $dropbox_report | tail -n 1 $dropbox_report
+
+	}
+
+#Upload the file to Dropbox
+	function upload_files_to_dropbox(){
+		echo "Beginning to upload the files to Dropbox" >> $dropbox_report | tail -n 1 $dropbox_report
+		$dropbox -p upload $pgp_file_name $(hostname)/$(pwd)/$pgp_file_name >> $dropbox_report | tail -n 1 $dropbox_report
+		echo "The Dropbox upload process has completed - Please check logs for any errors" >> $dropbox_report | tail -n 1 $dropbox_report
+		echo "" >> $dropbox_report | tail -n 1 $dropbox_report
+	}
+
+###############################
+#Install a size test. Mails under 8mb give the option
+#Encrypting email content
+	function create_email_body(){
+		echo "The backup of " $(pwd) has been made on $(hostname) at $(date) ". This backup was initiated by" $USER | gpg -ea -r $enc_pub_cert > body.txt
+		body=$(<body.txt)
+		echo
+	}
+
+#Compose email to send to email address
+	function compose_email(){
+		echo "$body" | mail -r $enc_pub_cert -s "$subject" -a $pgp_file_name $email_address   
+		echo "The $application_name has been emailed to $email_address" >> $dropbox_report | tail -n 1 $dropbox_report
+		echo
+	}
+###############################
+
+
+
+#Securely removing the unencrypted files from the disk
+	function destroy_unencrypted_content(){
+		echo "Shredding unencrypted" $application_name >> $dropbox_report | tail -n 1 $dropbox_report
+		shred -vfxn $shred_intensity $file_name
+		rm -rf $file_name
+		shred -vfxn $shred_intensity body.txt
+		rm -rf body.txt
+		echo "Any unencrypted file have been securely removed from the system" >> $dropbox_report | tail -n 1 $dropbox_report
+		echo "" >> $dropbox_report | tail -n 1 $dropbox_report
+	}
+
+
+#Securely removing the encrypted files from the disk
+	function destroy_encrypted_report(){
+		echo "Destroying the encrypted files from the system" >> $dropbox_report | tail -n 1 $dropbox_report
+		shred -vfxn $shred_intensity $pgp_file_name
+		rm -rf $pgp_file_name
+		echo "The encrypted files have been securly removed from the disk" >> $dropbox_report | tail -n 1 $dropbox_report
+		echo "The system has now completed the $application_name" >> $dropbox_report | tail -n 1 $dropbox_report
+		echo "" >> $dropbox_report | tail -n 1 $dropbox_report
+	}
+
+#Complete the report -  Send via email and add to Dropbox
+	function upload_report_to_dropbox(){
+		echo "Beginning to upload the files to Dropbox" >> $dropbox_report | tail -n 1 $dropbox_report
+		$dropbox -p upload $dropbox_report $(hostname)/$(pwd)/$dropbox_report >> $dropbox_report | tail -n 1 $dropbox_report
+		echo 
+	}
+
+#Compose email to send to email address
+	function compose_dropbox_report_email(){
+		gpg -e -r $enc_pub_cert $dropbox_report
+		db_report=$(<$encrypted_dropbox_report)
+		echo "$db_report" | mail -r $enc_pub_cert -s "$subject" -a $db_report $email_address   
+		echo "The Dropbox Report has been emailed to $email_address"
+		echo
+	}
+
+#Destroy the remaining report files
+	function destroy_dropbox_reports(){
+		echo "Shredding unencrypted Dropbox Reports"
+		shred -vfxn $shred_intensity $dropbox_report
+		rm -rf $dropbox_report
+		shred -vfxn $shred_intensity $encrypted_dropbox_report
+		rm -rf $encrypted_dropbox_report
+		echo
+	}
+
+#Make the interface clean and pretty!
+function clean_up(){
+	echo
+	echo
+	echo "Encrypted Dropbox backup of ${PWD##*/} is Complete"
+}
+
+#Run Application
+check_for_root_privilages
+check_environment
+backup_current_dir
+encrypt_zipped_backup
+upload_files_to_dropbox
+create_email_body
+compose_email
+destroy_unencrypted_content
+destroy_encrypted_report
+upload_report_to_dropbox
+compose_dropbox_report_email
+destroy_dropbox_reports
+clean_up

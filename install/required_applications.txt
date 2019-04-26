@@ -1,0 +1,8 @@
+#List all reqeuired applcations for the suite
+#Most upto date Repo or DL location is also included
+
+"htop" 
+"secure-delete" 
+"wget" 
+"pgpgpg"
+
