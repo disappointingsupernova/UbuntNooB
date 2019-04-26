@@ -1,7 +1,6 @@
 #!/bin/bash
 #DisappointingSupernova - 2019 - UbuntuNoob Ubuntu CLI Helper
 
-source ../src/functions
 
 #Install Nord VPN
 
@@ -37,13 +36,13 @@ echo "Now configuring the settings for NordVPN"
 nordvpn set protocol UDP
 nordvpn set killswitch 1
 nordvpn set cybersec 1
-nordvpn set autoconnect 1 $pref_server
+nordvpn set autoconnect 1 United_Kingdom
 echo "NordVPN Safeguards have been installed"
 }
 
 function connect_to_nord(){
 echo "Connecting to my preferred server"
-nordvpn c 
+nordvpn c manchester
 echo 
 echo "..."
 echo "Checking the status of the NordVPN Connection"
@@ -55,7 +54,9 @@ function clean_up(){
 echo 'Removing the temporary setup files'
 cd ../
 sudo rm -r $temp_dir
-exit 1
+echo "The installation is now complete"
+echo ""
+echo "If your login did not work then please run the command 'nordvpn login'"
 }
 
 nord_setup
