@@ -106,6 +106,56 @@ fi
 
 ##END RKHUNTER##
 
+##BEGIN INSTALL TEAMVIEWER##
+
+#Create teamviewer temp install file
+function teamv_create_temp_folder(){
+cd $HOME
+dir=.$RANDOM
+mkdir $dir
+cd $dir
+}
+
+#Check the debian version
+function teamv_download_installer(){
+arch=`uname -m`
+if [ "$arch" == "x86_64" ]
+then
+    echo "Downlaoding the 64 Bit Installer"
+    version="teamviewer_amd64.deb"
+    wget https://download.teamviewer.com/download/linux/$version
+else
+    echo "Downlaoding the 32 Bit Installer"
+    version="teamviewer_i386.deb"
+    wget https://download.teamviewer.com/download/linux/$version
+fi
+}
+
+function make_executable(){
+	chmod a+x $version
+}
+
+function install_tv(){
+	sudo apt install ./$version
+}
+
+function remove_temp_dir(){
+	cd $HOME
+	sudo rm -r $dir
+}
+
+function install_teamviewer(){
+	check_for_root_privilages
+	teamv_create_temp_folder
+	teamv_download_installer
+	make_executable
+	install_tv
+	remove_temp_dir
+}
+
+##END INSTALL TEAMVIEWER##
+
+
 ##CURRENT USERS AND SESSIONS##
 #List all system users
 function local_user_accounts(){
@@ -172,6 +222,7 @@ function current_sessions(){
 function core_app_env_check(){
 	app_name="Install UbuntuNoob depedancies"
 	check_for_root_privilages
+	#NEED TO ADD CHECK TO SEE IF DEPENDS ALREADY EXIST
 }
 
 function easy_apt(){
