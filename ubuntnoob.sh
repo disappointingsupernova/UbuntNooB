@@ -2,10 +2,16 @@
 #DisappointingSupernova - 2019 - UbuntuNoob Ubuntu CLI Helper
 
 #utilitymenu.sh - HAs made for a beautiful interface, not built yet but once made it should make the entire thing a little more Terminal/GUI
-#friendly/
+#friendly
 
-#A function to add is to print the command before its executed. Basically teaching people the commands theuy will need
-#The whole idea ia s noob library of things i'ev picked up along the way
+#The idea is to create multiple levels of dialog GUI, menus within menus - I'm trying to convert (almost there computer frineds to make the switch)
+#and so created this to not only help them adapt to their new enviorment but also to test out my skills because i am a noon
+
+#A function to add is to print the command before its executed. 
+#Basically teaching people the commands theuy will need
+#The whole idea ia s noob library of things i'ev picked up along the way to pass along to others#
+#I've got folders full of scripts that I am slowly test, 'improving' and then importing
+#Once happy with the functions, i'll start buildig the menu
 
 #note to self
 #after SRM first install add the - about secure delete function
@@ -691,3 +697,29 @@ done
 # if temp files found, delete em
 [ -f $OUTPUT ] && check_for_secure_delete && srm $OUTPUT
 [ -f $INPUT ] && check_for_secure_delete && srm $INPUT
+
+function variables_that_need_to_be_cleaned_and_intergrated(){
+#Here is the core confirguration if you want the applications to 'phone-home'
+#These personalised options will affect how the suite interacts with yo
+email_address="" #Setup free protonmail account, export public key and import to this machine. 
+PGP_PUBLIC_KEY="" #Enter the name or Identifier of the PGP Public Key you wish to use to send encrypted messages from these scripts #
+enc_pub_cert=PGP_PUBLIC_KEY #patch for some lazy code at the start of the project - will fix in time 
+file_root="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )" #BaseDirectory for the appliactionx
+functions=$file_root/src/core/functions #Calling all required functions 
+encrypted_email=$file_root/core/encrypted_email.sh #send pgp encrypted mails - remove before prodcution
+application_name="${PWD##*/} Folder Backup" #App name varies. Used as email subjects etc
+application_file_name="${application_name// /_}" #Replaces spaces with underscores for file compliance
+randint=$RANDOM # Generate random int for purposoes unknown
+subject="$application_name - $(hostname)$(pwd) - $(date)" #email subject is the current dir nd the time and date
+dropbox=$(pwd)/db_ctrl #This script is used to upload backedup files to Dropbox
+dropbox_report=$file_name"_report.txt" #A report is generated and uploaded to the same dir as the Dropbox backup
+encrypted_dropbox_report="$dropbox_report.gpg" #Report content is encrypted to be emailed to admin at the end of the run
+shred_intensity="1" # Number of times a file is shredded before secure-delete (38 Passes)
+shred_options="-vfzxn $shred_intensity" #Shred (Verbose, Force, Zero, Exact, Iterations)
+NOW=$(date +"%d-%m-%Y") #Needed the good old UK date formatting / Change this accordingly
+file_name="${PWD##*/}.$(hostname).$NOW.zip"
+pgp_file_name="$file_name.gpg"
+use_pgp=1
+great="test"
+file_root="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+}
