@@ -1,6 +1,13 @@
 #!/bin/bash
 #DisappointingSupernova - 2019 - UbuntuNoob Ubuntu CLI Helper
 
+#utilitymenu.sh - HAs made for a beautiful interface, not built yet but once made it should make the entire thing a little more Terminal/GUI
+#friendly/
+
+#A function to add is to print the command before its executed. Basically teaching people the commands theuy will need
+#The whole idea ia s noob library of things i'ev picked up along the way
+
+#note to self
 #after SRM first install add the - about secure delete function
 
 # Store menu options selected by the user
