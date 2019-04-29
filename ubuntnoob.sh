@@ -33,7 +33,8 @@ function display_output(){
 #
 while true
 do
-
+#!/bin/bash
+function main_menu(){
 ### display main menu ###
 dialog --clear  --help-button --backtitle "Linux Shell Script Tutorial" \
 --title "[ M A I N - M E N U ]" \
@@ -47,7 +48,8 @@ Editor "Start a text editor" \
 Exit "Exit to the shell" 2>"${INPUT}"
 
 menuitem=$(<"${INPUT}")
-
+}
+main_menu
 ##System Functions##
 
 function end_applcaiton_installation(){
@@ -272,8 +274,8 @@ function core_app_array_declare(){
 
 # initialize the array
 function core_app_fill_array(){
-	install_core_system_applications=("htop" "secure-delete" "wget" "curl" "pgpgpg")
-	core_applications_explained=("A great Task Manager" "A very secure file remover" "Allows for the download of files from the internet" "Another application for getting things from the internet" "Used to create and manage encrytion keys")
+	install_core_system_applications=("ufw" "htop" "iftop" "secure-delete" "wget" "curl" "pgpgpg")
+	core_applications_explained=("A simple firewall to protect your computer" "A great Task Manager" "A great network monitoring tool" "A very secure file remover" "Allows for the download of files from the internet" "Another application for getting things from the internet" "Used to create and manage encrytion keys")
 	applcations_installed=()
 }
 
