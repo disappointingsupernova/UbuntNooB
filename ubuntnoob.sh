@@ -106,6 +106,36 @@ fi
 
 ##END RKHUNTER##
 
+##BEGIN FORCE END APPLICATION##
+function end_application(){
+echo "Kill Process (PID): "
+read -r prkill
+scriptname=`basename "$prkill"`
+pgrep $scriptname
+pkill -9 $scriptname
+echo $scriptname" Has been terminated"
+exit 1
+}
+##END FORCE END APPLICATION##
+
+##ABOUT THE SYSTEM##
+#System installation time
+function find_system_installtion_time(){
+sudo ls -alct /|tail -1|awk '{print $6, $7, $8}'
+}
+
+#Other information about the system
+function call_system_report(){
+	lscpu
+}
+
+function system_report(){
+	find_system_installtion_time
+	call_system_report
+}
+
+##END ABOUT THE SYSTEM##
+
 ##BEGIN INSTALL TEAMVIEWER##
 
 #Create teamviewer temp install file
@@ -366,10 +396,11 @@ function terminal_cleaner(){
 
 ##BEGIN NORDVPN INSTALL FUNCTION##
 function nord_env_chk(){
-app_name="Install NordVPN"
-soft_name="NordVPN"
-temp_dir="nord_config_dir"
-current_nord_dl="nordvpn-release_1.0.0_all.deb"
+	check_for_root_privilages
+	app_name="Install NordVPN"
+	soft_name="NordVPN"
+	temp_dir="nord_config_dir"
+	current_nord_dl="nordvpn-release_1.0.0_all.deb"
 }
 
 function gather_required(){
@@ -389,31 +420,31 @@ function install_nord_vpn(){
 }
 
 function configure_nordvpn(){
-echo "Now configuring the settings for NordVPN"
-nordvpn set protocol UDP
-nordvpn set killswitch 1
-nordvpn set cybersec 1
-nordvpn set autoconnect 1 United_Kingdom
-echo "NordVPN Safeguards have been installed"
+	echo "Now configuring the settings for NordVPN"
+	nordvpn set protocol UDP
+	nordvpn set killswitch 1
+	nordvpn set cybersec 1
+	nordvpn set autoconnect 1 United_Kingdom
+	echo "NordVPN Safeguards have been installed"
 }
 
 function connect_to_nord(){
-echo "Connecting to my preferred server"
-nordvpn c manchester
-echo 
-echo "..."
-echo "Checking the status of the NordVPN Connection"
-nordvpn status
-echo
+	echo "Connecting to my preferred server"
+	nordvpn c manchester
+	echo 
+	echo "..."
+	echo "Checking the status of the NordVPN Connection"
+	nordvpn status
+	echo
 }
 
 function clean_up(){
-echo 'Removing the temporary setup files'
-cd ../
-sudo rm -r $temp_dir
-echo "The installation is now complete"
-echo ""
-echo "If your login did not work then please run the command 'nordvpn login'"
+	echo 'Removing the temporary setup files'
+	cd ../
+	sudo rm -r $temp_dir
+	echo "The installation is now complete"
+	echo ""
+	echo "If your login did not work then please run the command 'nordvpn login'"
 }
 
 function nord_setup(){
@@ -427,15 +458,34 @@ function nord_setup(){
 }
 ##END NORDVPN INSTALL FUNCTION##
 
+##BEGIN NORDVPN STATUS ALERT#
+function get_nord_status(){
+	nordvpn status
+}
+
+function list_nord_options(){
+	nordvpn settings list
+}
+
+function about_nord(){
+	echo "Current NordVPN status"
+	get_nord_status
+	echo ""
+	echo "NordVPN Settings"
+	list_nord_options
+}
+
+##END NORD STATUS##
+
 ##BEGIN INSTALL SUBLIME TEXT EDITOR FUNCTION##
 #Installation variables
-function sublime_env_check(){
-	#CHECK ROOT
-application_ident="Sublime Text Editor"
-app_name=$application_ident
-temp_dir="$application_ident_config_dir"
-installation_attempted=0
-installation_completed=0
+	function sublime_env_check(){
+	check_for_root_privilages
+	application_ident="Sublime Text Editor"
+	app_name=$application_ident
+	temp_dir="$application_ident_config_dir"
+	installation_attempted=0
+	installation_completed=0
 }
 
 function check_for_sublime(){
@@ -519,20 +569,20 @@ function use_sublime_as_default(){
 }
 
 function sublime_setup(){
-sublime_env_check
-check_for_root_privilages #Called from functions
-check_for_sublime
-install_GPG_key
-allow_https_sources
-choose_release
-update #Called from functions
-install_sublime
-echo ""
-echo $application_ident " has now been installed."
-echo "If the application requires a key - Have a look online #WinRAR"
-echo ""
-add_sublime_as_executable
-sublime_end_applcaiton_installation
+	sublime_env_check
+	check_for_root_privilages #Called from functions
+	check_for_sublime
+	install_GPG_key
+	allow_https_sources
+	choose_release
+	update #Called from functions
+	install_sublime
+	echo ""
+	echo $application_ident " has now been installed."
+	echo "If the application requires a key - Have a look online #WinRAR"
+	echo ""
+	add_sublime_as_executable
+	sublime_end_applcaiton_installation
 }
 ##END SUBLIME INSTALL FUNCTION##
 
