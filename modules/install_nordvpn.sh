@@ -2,17 +2,12 @@
 #DisappointingSupernova - 2019 - UbuntuNoob Ubuntu CLI Helper
 
 
-#Install Nord VPN
-
-function nord_setup(){
-	temp_dir="nord_config_dir"
-	current_nord_dl="nordvpn-release_1.0.0_all.deb"
-	gather_required
-	add_nord_repo
-	clean_up
-	install_nord_vpn
-	configure_nordvpn
-	connect_to_nord
+##BEGIN NORDVPN INSTALL FUNCTION##
+function nord_env_chk(){
+app_name="Install NordVPN"
+soft_name="NordVPN"
+temp_dir="nord_config_dir"
+current_nord_dl="nordvpn-release_1.0.0_all.deb"
 }
 
 function gather_required(){
@@ -59,4 +54,13 @@ echo ""
 echo "If your login did not work then please run the command 'nordvpn login'"
 }
 
-nord_setup
+function nord_setup(){
+	nord_env_chk
+	gather_required
+	add_nord_repo
+	install_nord_vpn
+	configure_nordvpn
+	connect_to_nord
+	clean_up
+}
+##END NORDVPN INSTALL FUNCTION##

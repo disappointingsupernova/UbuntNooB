@@ -1,62 +1,36 @@
 #!/bin/bash
 #DisappointingSupernova - 2019 - UbuntuNoob Ubuntu CLI Helper
 
-source ../src/functions
-
-#Install Sublime Text Editor
-
 #Installation variables
+function sublime_env_check(){
+	#CHECK ROOT
 application_ident="Sublime Text Editor"
 app_name=$application_ident
 temp_dir="$application_ident_config_dir"
 installation_attempted=0
 installation_completed=0
-
-function install_app(){
-	echo "Would you like to install" $application_to_install "? [Y/N]"
-	read make_install
-	echo ""
-if [[ "$make_install" =~ (yes|y|Y)$ ]]; then
-			sublime_setup
-	    	installation_attempted=1
-	    	confirm_installation
-			echo "Installation Report"
-	else
-		echo "The installation has been cancelled"
-fi
 }
 
-function install_app(){
-	echo "Would you like to install" $application_to_install "? [Y/N]"
-	read make_install
-	echo ""
-if [[ "$make_install" =~ (yes|y|Y)$ ]]; then
-			sublime_setup
-	    	installation_attempted=1
-	    	confirm_installation
-			echo "Installation Report"
-	else
-		echo "The installation has been cancelled"
-fi
-}
-
-function begin_sublime_install(){
+function check_for_sublime(){
 	if [ ! -f /usr/share/applications/sublime_text.desktop ]; then
 			echo ""
 	    	echo "The sublime executable can not be found"
 	    	install_app
 		else
-			echo "$application_ident is installed, would you like to reinstall or repair it?"
+			echo "$application_ident is installed"
+			exit
 	fi
 }
 
-function confirm_installation(){
-	if [ installation_attempted = 1 ]; then
-		begin_sublime_install
-		installation_attempted=0
-		echo ""
-		echo "The system failed to installed "$application_ident
-	fi
+function install_app(){
+	echo "Would you like to install" $application_to_install "? [Y/N]"
+	read make_install
+	echo ""
+if [[ "$make_install" =~ (yes|y|Y)$ ]]; then
+			sublime_setup
+	else
+		echo "The installation has been cancelled"
+fi
 }
 
 
@@ -70,9 +44,9 @@ function allow_https_sources() {
 
 function choose_release(){
 	echo""
-	echo "###################################################"
-	echo -n "Would you like to install the stable release?  #" #To grab the users attention as the console doesnt clear for a swhile
-	echo "###################################################"
+	echo "#####################################################"
+	echo -n "Would you like to install the stable release(Y/N) ?# " #To grab the users attention as the console doesnt clear for a swhile
+	echo "#####################################################"
 	read stable_relase
 	echo ""
 	if [[ "$stable_relase" =~ (yes|y|Y)$ ]]; then
@@ -83,6 +57,10 @@ function choose_release(){
 		echo "deb https://download.sublimetext.com/ apt/dev/" | sudo tee /etc/apt/sources.list.d/sublime-text.list
 
 	fi
+}
+
+function install_sublime(){
+sudo apt-get install -y sublime-text 
 }
 
 function add_sublime_as_executable(){
@@ -101,7 +79,7 @@ if [ ! -f /usr/local/bin/sublime_text ]; then
 }
 
 function use_sublime_as_default(){
-	echo -n "Would you like to use Sublime as your Default text editor?"
+	echo -n "Would you like to use Sublime as your Default text editor (Y/N)?"
 	read sublime_default
 	echo
 	if [[ "$sublime_default" =~ (yes|y|Y)$ ]]; then
@@ -112,29 +90,19 @@ function use_sublime_as_default(){
 	fi
 }
 
-
-function install_sublime(){
-sudo apt-get install -y sublime-text 
-}
-
-
-function clean_up(){
-history -c
-}
-
-function end_applcaiton_installation(){
-	echo $application_ident " has been installed"
-}
-
 function sublime_setup(){
+sublime_env_check
 check_for_root_privilages #Called from functions
+check_for_sublime
 install_GPG_key
 allow_https_sources
 choose_release
 update #Called from functions
 install_sublime
+echo ""
 echo $application_ident " has now been installed."
 echo "If the application requires a key - Have a look online #WinRAR"
+echo ""
 add_sublime_as_executable
 clean_up
 end_applcaiton_installation

@@ -3,6 +3,9 @@
 
 source ../src/functions
 
+
+
+
 #BEGIN SYSTEM UPDATE FUNCTION#
 function check_env(){
 	app_name="System Updater"

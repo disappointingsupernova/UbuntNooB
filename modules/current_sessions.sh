@@ -1,7 +1,6 @@
 #!/bin/bash
 #DisappointingSupernova - 2019 - UbuntuNoob Ubuntu CLI Helper
 
-source ../src/functions
 
 #List all system users
 function local_user_accounts(){
@@ -63,3 +62,4 @@ function current_sessions(){
 	all_groups
 }
 
+current_sessions

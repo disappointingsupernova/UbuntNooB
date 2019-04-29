@@ -4,7 +4,7 @@
 source ../src/functions
 
 #Securely remove bash history and prevent further recording of the bash history
-
+##BEGIN SECURE BASH FUNCTION##
 function securing_bash_history(){
 	source functions
 	app_name="Securing Bash History"
@@ -45,4 +45,4 @@ echo 'export LESSHISTFILE="-"' >> ~/.bashrc
 	bash_sanatise
 
  }
-
+##END SECURE BASH FUNCTION##
