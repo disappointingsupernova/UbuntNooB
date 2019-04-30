@@ -554,20 +554,60 @@ function nord_setup(){
 ##END NORDVPN INSTALL FUNCTION##
 
 ##BEGIN NORDVPN STATUS ALERT#
+
 function get_nord_status(){
-	nordvpn status
+nordvpn status
 }
 
 function list_nord_options(){
-	nordvpn settings list
+nordvpn settings list
+}
+
+function wan_ip(){
+	wan_file_name="WanIPPInaW.txt"
+	curl -s ifconfig.me/ip > $wan_file_name
+	wan_ip=$(<$wan_file_name)
+	echo $wan_ip
+	srm $wan_file_name
+}
+
+
+function check_IPV4(){
+ip_add="1.1.1.1"
+ip_sp="Cloudflare"
+if ping -q -c 1 -W 1 $ip_add >/dev/null; then
+  echo "$ip_sp IPv4 DNS Server is up"
+else
+  echo "$ip_sp IPv4 DNS Server is down"
+fi
+}
+
+function check_IPV4_dns(){
+url="a4b.us-east-1.amazonaws.com"
+urlservername="AmazonAWS"
+if ping -q -c 1 -W 1 a4b.us-east-1.amazonaws.com >/dev/null; then
+  echo "$urlservername network is up"
+else
+  echo "$urlservername network is down"
+fi
 }
 
 function about_nord(){
-	echo "Current NordVPN status"
-	get_nord_status
-	echo ""
-	echo "NordVPN Settings"
-	list_nord_options
+echo "Current NordVPN status"
+get_nord_status
+echo ""
+echo "NordVPN Settings"
+list_nord_options
+echo ""
+echo "Your WAN IP"
+wan_ip
+echo ""
+echo "Checking your connection to the IPV4 network"
+check_IPV4
+echo ""
+echo "Checking your connection to DNS Server"
+check_IPV4_dns
+
 }
 
 ##END NORD STATUS##
