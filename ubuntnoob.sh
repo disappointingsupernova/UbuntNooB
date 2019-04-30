@@ -17,6 +17,8 @@
 #note to self
 #after SRM first install add the - about secure delete function
 
+
+##BENIN MENU VARIABLES##
 # Store menu options selected by the user
 INPUT=/tmp/menu.sh.$$
 
@@ -50,25 +52,15 @@ function display_output(){
 #
 while true
 do
-#!/bin/bash
-function main_menu(){
-### display main menu ###
-dialog --clear  --help-button --backtitle "$suite_name - With Unattended Setup Ability" \
---title "[ M A I N - M E N U ]" \
---menu "You can use the UP/DOWN arrow keys, the first \n\
-letter of the choice as a hot key, or the \n\
-number keys 1-9 to choose an option.\n\
-Choose the TASK" 15 50 4 \
-Date/time "Displays date and time" \
-Calendar "Displays a calendar" \
-Editor "Start a text editor" \
-Exit "Exit to the shell" 2>"${INPUT}"
 
-menuitem=$(<"${INPUT}")
-}
 main_menu
-##System Functions##
 
+##BENIN MENU VARIABLES##
+
+
+##BEGIN SYSTEM MANEGMENT FUNCTIONS##
+
+#INSTALL COMPLETE#
 function end_applcaiton_installation(){
 	echo $application_ident " has been installed"
 }
@@ -226,10 +218,8 @@ function install_tor_browser(){
 	remove_temp_dir
 }
 
-install_tor_browser
 
-##END INSTALL TOR#~
-
+##END TOR BROWSER LIST##
 
 ##BEGIN INSTALL TEAMVIEWER##
 
