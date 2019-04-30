@@ -4,7 +4,8 @@
 #utilitymenu.sh - HAs made for a beautiful interface, not built yet but once made it should make the entire thing a little more Terminal/GUI
 #friendly
 
-#The idea is to create multiple levels of dialog GUI, menus within menus - I'm trying to convert (almost there computer frineds to make the switch)
+#The idea is to create multiple levels of dialog GUI, menus within menus 
+#I0'm trying to convert (almost there computer frineds to make the switch)
 #and so created this to not only help them adapt to their new enviorment but also to test out my skills because i am a noon
 
 #A function to add is to print the command before its executed. 
@@ -26,7 +27,10 @@ OUTPUT=/tmp/output.sh.$$
 vi_editor=${EDITOR-vi}
 
 # trap and delete temp files
-trap "rm $OUTPUT; rm $INPUT; exit" SIGHUP SIGINT SIGTERM
+trap "rm $OUTPUT; rm $INPUT; exit" SIGHUP SIGINT SIGTERM77
+
+# Set the application name
+suite_name="UbuntuNoob"
 
 #
 # Purpose - display output using msgbox 
@@ -38,7 +42,7 @@ function display_output(){
 	local h=${1-10}			# box height default 10
 	local w=${2-41} 		# box width default 41
 	local t=${3-Output} 	# box title 
-	dialog --backtitle "UbuntuNoob" --title "${t}" --clear --msgbox "$(<$OUTPUT)" ${h} ${w}
+	dialog --backtitle "$suite_name" --title "${t}" --clear --msgbox "$(<$OUTPUT)" ${h} ${w}
 }
 
 #
@@ -49,7 +53,7 @@ do
 #!/bin/bash
 function main_menu(){
 ### display main menu ###
-dialog --clear  --help-button --backtitle "Linux Shell Script Tutorial" \
+dialog --clear  --help-button --backtitle "$suite_name - With Unattended Setup Ability" \
 --title "[ M A I N - M E N U ]" \
 --menu "You can use the UP/DOWN arrow keys, the first \n\
 letter of the choice as a hot key, or the \n\
@@ -147,6 +151,85 @@ function show_calendar(){
 	display_output 13 25 "Calendar"
 }
 ##END SHOW CALENADR##
+
+##BEGIN INSTALL TOR##
+#Create temp install location
+function create_temp_folder(){
+cd $HOME
+dir=.$RANDOM
+mkdir $dir
+cd $dir
+}
+
+function tor_download_locations(){
+	release=8.0.8
+	dl_url="https://dist.torproject.org/torbrowser"
+	folder="tor-browser_en-US/"
+}
+
+#Check the debian version
+function download_installer(){
+arch=`uname -m`
+if [ "$arch" == "x86_64" ]
+then
+    echo "You are running an x86_64 version of Linux"
+    echo "I am now downlaoding the 64 Bit Installer"
+    version="tor-browser-linux64-"$release"_en-US.tar.xz"
+    sig_loc="tor-browser-linux64-"$release"_en-US.tar.xz.asc"
+    tor_file_name=$version
+    wget $dl_url/$release/$version
+    wget $dl_url/$release/$sig_loc
+    tar -xvf $tor_file_name
+    mv $folder $HOME/$folder
+    cd $HOME/$folder
+   ./start-tor-browser.desktop
+    cd tor-browser_en-US/
+else
+    echo "You are running an x86_32 version of Linux"
+    echo "I am now downlaoding the 32 Bit Installer"
+    version="tor-browser-linux32-"$release"_en-US.tar.xz"
+    sig_loc="tor-browser-linux32-"$release"_en-US.tar.xz"
+    tor_file_name=$version
+    wget $dl_url/$release/$version
+    wget $dl_url/$release/$sig_loc
+    tar -xvf $tor_file_name
+    mv $tor_file_name $HOME/$tor_file_name
+    cd $HOME/$tor_file_name
+    cd tor-browser_en-US/
+    cd $folder
+     ./start-tor-browser.desktop
+    cd tor-browser_en-US/
+fi
+}
+
+
+function make_tor_executable(){
+	sudo chmod a+x $tor_file_name
+}
+
+function install_tor(){
+	sudo apt install ./$tor_file_name
+}
+
+function remove_temp_dir(){
+	cd $HOME
+	sudo srm -rfv $dir
+}
+
+function install_tor_browser(){
+	check_for_root_privilages
+	download_locations
+	create_temp_folder
+	tor_download_installer
+	make_tor_executable
+	install_tor
+	remove_temp_dir
+}
+
+install_tor_browser
+
+##END INSTALL TOR#~
+
 
 ##BEGIN INSTALL TEAMVIEWER##
 
@@ -287,8 +370,8 @@ function core_app_array_declare(){
 
 # initialize the array
 function core_app_fill_array(){
-	install_core_system_applications=("ufw" "htop" "iftop" "secure-delete" "wget" "curl" "pgpgpg")
-	core_applications_explained=("A simple firewall to protect your computer" "A great Task Manager" "A great network monitoring tool" "A very secure file remover" "Allows for the download of files from the internet" "Another application for getting things from the internet" "Used to create and manage encrytion keys")
+	install_core_system_applications=("putty" "telegram-desktop" "ufw" "htop" "iftop" "secure-delete" "wget" "curl" "pgpgpg")
+	core_applications_explained=("Connect to an SSH Server with Putty" "Desktop Version of Telegram Secure Messenger" "A simple firewall to protect your computer" "A great Task Manager" "A great network monitoring tool" "A very secure file remover" "Allows for the download of files from the internet" "Another application for getting things from the internet" "Used to create and manage encrytion keys")
 	applcations_installed=()
 }
 
