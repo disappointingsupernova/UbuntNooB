@@ -1,30 +1,28 @@
 #!/bin/bash
+#DisappointingSupernova - 2019 - UbuntuNoob Ubuntu CLI Helper
 
-
+file_location=$HOME/.ssh/FingerPrints.txt
 function key_confirm(){
-	cd $HOME
-		echo "Quick Sleep"
 
-	sleep 3s
+echo "Generating fingerprint for each file"
 
-	FILES=$HOME/.ssh/*
+FILES=$HOME/.ssh/*
 		for f in $FILES
 		do
-		ssh-keygen -E md5 -f $f -l > key_confirm.txt
-		ssh-keygen -E sha256 -f $f -l >> key_confirm.txt
-		ssh-keygen -E md5 -f $f -l >> key_confirm.txt
+		cd $HOME/.ssh
+		ssh-keygen -E md5 -f $f -l > $file_location
+		ssh-keygen -E sha256 -f $f -l >> $file_location
+		ssh-keygen -E md5 -f $f -l >> $file_location
 		done
 
-		sleep 3s
-	
-	gpg -r "TheMagicWizard" -e key_confirm.txt
-		echo "Quick Sleep"
-			sleep 3
+echo "Now encryting the file using my Certificate of choice"
+		cd $HOME/.ssh
+			gpg -r "TheMagicWizard" -e $file_location
 
-	shred -vfzxn 3 key_confirm.txt
-	rm key_confirm/.txt
+echo "Encrypted files have been created - now removing the unencrpyted files" 
+#Pretty sure this can be doen without haveing to create a file first. encrypt the variable and then dump it... 
+#Does it offer the same protection as 38 pass srm?
+	shred -vfzxn 3 $file_location
+	rm $file_location
 }
-
 key_confirm
-
-
