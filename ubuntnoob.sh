@@ -73,6 +73,12 @@ function end_applcaiton_installation(){
 	echo $application_ident " has been installed"
 }
 
+##BEGIN INSTALL ExFAT CONTROLLER##
+function ecfat_install(){
+	sudo apt-get install exfat-fuse exfat-utils
+}
+#END ExFAT INSTALLER# 
+
 ##BEGIN SUDO CHECK FUNCTION##
 function check_for_root_privilages(){
 	if [[ $EUID -ne 0 ]]; then
